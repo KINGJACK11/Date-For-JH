@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>约会邀请 💌</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Quicksand:wght@500;600;700&family=Noto+Sans+SC:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --pink: #FFD6E8;
+    --lav: #D9C6FF;
+    --peach: #FFE3B8;
+    --ink: #3B2A55;
+    --ink-soft: #8577A0;
+    --card: rgba(255,255,255,0.72);
+    --accent: #FF6F91;
+    --accent-deep: #E14C74;
+    --accent2: #7C6CF0;
+    --gold: #FFC857;
+    --line: rgba(59,42,85,0.10);
+  }
+
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+
+  body{
+    background: linear-gradient(160deg, var(--pink) 0%, var(--lav) 55%, var(--peach) 100%);
+    background-size: 200% 200%;
+    animation: bgshift 16s ease-in-out infinite;
+    min-height:100vh;
+  }
+  @keyframes bgshift{
+    0%,100%{ background-position: 0% 0%; }
+    50%{ background-position: 100% 100%; }
+  }
+
+  .blob{
+    position:fixed;
+    border-radius:50%;
+    filter: blur(50px);
+    opacity:0.55;
+    z-index:0;
+    animation: float 12s ease-in-out infinite;
+  }
+  .blob1{ width:280px; height:280px; background:var(--accent); top:-60px; left:-80px; }
+  .blob2{ width:220px; height:220px; background:var(--accent2); bottom:-60px; right:-60px; animation-delay:2s; }
+  .blob3{ width:160px; height:160px; background:var(--gold); top:40%; right:-40px; animation-delay:4s; }
+  @keyframes float{
+    0%,100%{ transform: translate(0,0) scale(1); }
+    50%{ transform: translate(20px,-25px) scale(1.08); }
+  }
+
+  .spark{
+    position:fixed;
+    pointer-events:none;
+    opacity:0.6;
+    z-index:0;
+    animation: rise 10s linear infinite;
+  }
+  @keyframes rise{
+    0%{ transform: translateY(0) rotate(0deg); opacity:0; }
+    10%{ opacity:0.75; }
+    90%{ opacity:0.6; }
+    100%{ transform: translateY(-105vh) rotate(180deg); opacity:0; }
+  }
+
+  .stage{
+    position:relative;
+    z-index:1;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 16px;
+  }
+
+  .wrap{ width:100%; max-width:440px; }
+
+  .brand{
+    text-align:center;
+    font-size:11px;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+    font-weight:600;
+  }
+
+  .emoji-strip{
+    text-align:center;
+    font-size:16px;
+    letter-spacing:4px;
+    margin-bottom:16px;
+    opacity:0.85;
+    filter: drop-shadow(0 2px 6px rgba(59,42,85,0.15));
+  }
+
+  .card{
+    background:var(--card);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,0.6);
+    box-shadow: 0 30px 70px -25px rgba(59,42,85,0.45);
+    padding:30px 26px 26px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .progress-track{
+    height:6px;
+    background:rgba(59,42,85,0.08);
+    border-radius:100px;
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius:100px;
+    transition: width .45s cubic-bezier(.4,0,.2,1);
+  }
+
+  .panel{ animation: fadeIn .4s ease; }
+  @keyframes fadeIn{
+    from{ opacity:0; transform: translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .step-tag{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent-deep);
+    margin-bottom:8px;
+  }
+
+  h2.q{
+    font-family:'Fraunces', 'Noto Sans SC', serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:24px;
+    line-height:1.4;
+    margin:0 0 6px;
+  }
+  p.sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:0 0 20px;
+    font-weight:500;
+  }
+
+  /* invite step */
+  .invite-emoji{
+    font-size:52px;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .invite-actions{
+    position:relative;
+    display:flex;
+    gap:12px;
+    margin-top:24px;
+    min-height:56px;
+  }
+  .yes-btn, .no-btn{
+    flex:1;
+    padding:15px 10px;
+    border-radius:16px;
+    border:none;
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+  }
+  .yes-btn{
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color:#fff;
+    box-shadow: 0 12px 24px -10px rgba(225,76,116,0.55);
+    transition: transform .15s ease;
+  }
+  .yes-btn:hover{ transform: translateY(-2px) scale(1.02); }
+  .no-btn{
+    background:rgba(59,42,85,0.06);
+    color:var(--ink-soft);
+    position:relative;
+    transition: transform .12s ease;
+  }
+
+  /* generic option grid */
+  .options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .opt{
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.55);
+    border-radius:16px;
+    padding:16px 12px;
+    text-align:center;
+    cursor:pointer;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .opt .oi{ font-size:24px; display:block; margin-bottom:6px; }
+  .opt .ot{ font-size:13.5px; font-weight:600; }
+  .opt:hover{ transform:translateY(-3px); border-color:var(--accent); }
+  .opt.picked{
+    border-color:var(--accent-deep);
+    background: linear-gradient(135deg, rgba(255,111,145,0.16), rgba(124,108,240,0.14));
+  }
+
+  /* date/time + dress inputs */
+  .field-group{ margin-bottom:16px; }
+  .field-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  input[type="date"], input[type="time"], input[type="text"]{
+    width:100%;
+    padding:13px 14px;
+    border-radius:14px;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.7);
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  input:focus{ border-color:var(--accent); }
+
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:8px;
+  }
+  .chip{
+    padding:7px 13px;
+    border-radius:100px;
+    background:rgba(59,42,85,0.06);
+    border:none;
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .chip:hover, .chip.on{
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color:#fff;
+  }
+
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:24px;
+    gap:10px;
+  }
+  .back-btn{
+    background:none; border:none;
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:600;
+    font-size:13px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    visibility:hidden;
+    padding:8px 2px;
+  }
+  .back-btn.show{ visibility:visible; }
+
+  .next-btn{
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color:#fff;
+    border:none;
+    padding:13px 24px;
+    border-radius:14px;
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    box-shadow: 0 10px 22px -10px rgba(225,76,116,0.55);
+    transition: transform .15s ease;
+  }
+  .next-btn:hover{ transform: translateY(-2px); }
+
+  /* mini live preview badge */
+  .peek{
+    position:fixed;
+    bottom:18px;
+    right:18px;
+    background:var(--card);
+    backdrop-filter: blur(16px);
+    border:1px solid rgba(255,255,255,0.6);
+    border-radius:18px;
+    padding:12px 14px;
+    box-shadow: 0 16px 40px -18px rgba(59,42,85,0.5);
+    font-size:12px;
+    max-width:170px;
+    z-index:5;
+    opacity:0;
+    transform: translateY(12px);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events:none;
+  }
+  .peek.show{ opacity:1; transform:translateY(0); }
+  .peek-title{
+    font-weight:700;
+    color:var(--accent-deep);
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    margin-bottom:6px;
+  }
+  .peek-row{ display:flex; gap:6px; align-items:center; margin-bottom:3px; color:var(--ink-soft); font-weight:600; }
+  .peek-row .pv{ color:var(--ink); }
+  @media (max-width:480px){
+    .peek{ left:16px; right:16px; bottom:auto; top:14px; max-width:none; display:flex; gap:14px; align-items:center; }
+    .peek-title{ margin-bottom:0; }
+    .peek-body{ display:flex; gap:12px; flex-wrap:wrap; }
+    .peek-row{ margin-bottom:0; }
+  }
+
+  /* tease popups when dodging 不可以 */
+  .tease{
+    position:fixed;
+    z-index:30;
+    background:#fff;
+    border:1.5px solid rgba(255,111,145,0.35);
+    color:var(--accent-deep);
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:700;
+    font-size:12.5px;
+    padding:8px 13px;
+    border-radius:100px;
+    box-shadow: 0 12px 26px -12px rgba(59,42,85,0.5);
+    pointer-events:none;
+    animation: teaseFloat 1.8s ease forwards;
+    white-space:nowrap;
+  }
+  @keyframes teaseFloat{
+    0%{ opacity:0; transform: translateY(6px) scale(.85); }
+    15%{ opacity:1; transform: translateY(-4px) scale(1); }
+    75%{ opacity:1; }
+    100%{ opacity:0; transform: translateY(-34px) scale(.95); }
+  }
+
+  /* result */
+  .result-panel{ display:none; }
+  .result-panel.show{ display:block; animation: popIn .5s cubic-bezier(.2,.9,.3,1.2); }
+  @keyframes popIn{
+    from{ opacity:0; transform: scale(.92); }
+    to{ opacity:1; transform: scale(1); }
+  }
+
+  #shareCard{
+    background: linear-gradient(165deg, #FFF3F7, #F3EEFF);
+    border-radius:22px;
+    padding:26px 22px;
+    border:1px solid rgba(255,255,255,0.8);
+  }
+
+  .result-emoji{ font-size:46px; text-align:center; margin-bottom:4px; }
+  .result-title{
+    font-family:'Fraunces', 'Noto Sans SC', serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:23px;
+    text-align:center;
+    margin:0 0 2px;
+  }
+  .result-sub{
+    text-align:center;
+    font-size:13px;
+    color:var(--ink-soft);
+    font-weight:600;
+    margin:0 0 20px;
+  }
+
+  .detail-list{ display:flex; flex-direction:column; gap:12px; margin-bottom:22px; }
+  .detail-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:rgba(255,255,255,0.6);
+    border-radius:14px;
+    padding:11px 14px;
+  }
+  .detail-ic{ font-size:19px; flex:none; }
+  .detail-txt .dk{ font-size:10.5px; font-weight:700; letter-spacing:0.08em; color:var(--ink-soft); }
+  .detail-txt .dv{ font-size:14.5px; font-weight:700; color:var(--ink); }
+
+  .action-row{ display:flex; gap:10px; }
+  .action-btn{
+    flex:1;
+    padding:13px;
+    border-radius:14px;
+    border:none;
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+    transition: transform .15s ease;
+  }
+  .action-btn:hover{ transform: translateY(-2px); }
+  .action-primary{
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color:#fff;
+    box-shadow: 0 10px 22px -10px rgba(225,76,116,0.5);
+  }
+  .action-secondary{
+    background:rgba(59,42,85,0.07);
+    color:var(--ink);
+  }
+
+  .restart-link{
+    display:block;
+    text-align:center;
+    margin-top:16px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:600;
+  }
+  .restart-link:hover{ color:var(--accent-deep); }
+
+  .toast{
+    position:fixed;
+    bottom:24px; left:50%;
+    transform: translate(-50%, 20px);
+    background:var(--ink);
+    color:#fff;
+    padding:10px 18px;
+    border-radius:100px;
+    font-size:12.5px;
+    font-weight:600;
+    opacity:0;
+    transition: opacity .25s ease, transform .25s ease;
+    z-index:20;
+    pointer-events:none;
+  }
+  .toast.show{ opacity:1; transform: translate(-50%, 0); }
+
+  /* music widget */
+  .music-widget{
+    position:fixed;
+    left:18px;
+    bottom:18px;
+    z-index:15;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .music-toggle{
+    width:46px; height:46px;
+    border-radius:50%;
+    border:none;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow: 0 12px 26px -10px rgba(225,76,116,0.55);
+    display:flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+  .music-toggle span{
+    display:inline-block;
+    animation: spin 3.5s linear infinite;
+    animation-play-state: paused;
+  }
+  .music-toggle.spinning span{ animation-play-state: running; }
+  @keyframes spin{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+  }
+
+  .music-panel{
+    background:var(--card);
+    backdrop-filter: blur(16px);
+    border:1px solid rgba(255,255,255,0.6);
+    border-radius:16px;
+    padding:9px 12px;
+    box-shadow: 0 14px 34px -18px rgba(59,42,85,0.5);
+    max-width:215px;
+  }
+  .music-title{
+    font-size:11px;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    margin-bottom:5px;
+  }
+  .music-tracks{ display:grid; grid-template-columns: 1fr 1fr; gap:6px; }
+  .track-btn.full{ grid-column: 1 / -1; }
+  .track-btn{
+    border:none;
+    background:rgba(59,42,85,0.07);
+    color:var(--ink-soft);
+    font-family:'Quicksand', 'Noto Sans SC', sans-serif;
+    font-weight:700;
+    font-size:10.5px;
+    padding:6px 9px;
+    border-radius:100px;
+    cursor:pointer;
+    text-align:center;
+    white-space:nowrap;
+    transition: background .15s ease, color .15s ease;
+  }
+  .track-btn.on{
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color:#fff;
+  }
+
+  @media (max-width:480px){
+    .music-widget{ left:12px; bottom:12px; }
+    .music-panel{ max-width:195px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .blob, .spark, body{ animation:none; }
+    .music-toggle span{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+
+<div class="stage">
+  <div class="wrap">
+    <div class="brand">约会邀请函 💌</div>
+
+    <div class="card" id="card">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+      <!-- FORM PANELS -->
+      <div id="formArea"></div>
+
+      <!-- RESULT -->
+      <div class="result-panel" id="resultPanel">
+        <div id="shareCard">
+          <div class="result-emoji">🥰❤️</div>
+          <h2 class="result-title">完美的约会！</h2>
+          <p class="result-sub">这是我们甜蜜的约会计划 ✨</p>
+
+          <div class="detail-list" id="detailList"></div>
+        </div>
+
+        <div class="action-row" style="margin-top:18px;">
+          <button class="action-btn action-primary" id="downloadBtn">⬇ 保存图片</button>
+          <button class="action-btn action-secondary" id="copyBtn">📋 复制文字</button>
+        </div>
+        <button class="restart-link" id="restartBtn">↺ 重新开始</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="peek" id="peek">
+  <div class="peek-title">我们的约会计划</div>
+  <div class="peek-body" id="peekBody"></div>
+</div>
+
+<div class="toast" id="toast">已复制 ✅</div>
+
+<div class="music-widget" id="musicWidget">
+  <button class="music-toggle" id="musicToggle" aria-label="播放/暂停">
+    <span id="musicIcon">♪</span>
+  </button>
+  <div class="music-panel">
+    <div class="music-title" id="musicTitle">背景音乐</div>
+    <div class="music-tracks">
+      <button class="track-btn on" id="trackJay" type="button">🎈 告白气球</button>
+      <button class="track-btn" id="trackMitski" type="button">🌙 My Love</button>
+      <button class="track-btn full" id="trackLany" type="button">✨ Prettiest Thing</button>
+    </div>
+  </div>
+</div>
+
+<audio id="audioLany" src="song-lany.mp3" preload="auto" loop></audio>
+<audio id="audioMitski" src="song-mitski.mp3" preload="auto" loop></audio>
+<audio id="audioJay" src="song-gaobai.mp3" preload="auto" loop></audio>
+
+<script>
+(function(){
+  // ---------- background music ----------
+  const audioLany = document.getElementById('audioLany');
+  const audioMitski = document.getElementById('audioMitski');
+  const audioJay = document.getElementById('audioJay');
+  const trackLany = document.getElementById('trackLany');
+  const trackMitski = document.getElementById('trackMitski');
+  const trackJay = document.getElementById('trackJay');
+  const musicToggle = document.getElementById('musicToggle');
+  const musicIcon = document.getElementById('musicIcon');
+
+  const allTracks = [
+    { audio: audioLany, btn: trackLany },
+    { audio: audioMitski, btn: trackMitski },
+    { audio: audioJay, btn: trackJay },
+  ];
+
+  let current = audioJay;
+  let isPlaying = false;
+
+  function setIcon(){
+    musicIcon.textContent = isPlaying ? '❚❚' : '♪';
+    musicToggle.classList.toggle('spinning', isPlaying);
+  }
+
+  function tryAutoplay(){
+    current.volume = 0.7;
+    current.play().then(()=>{
+      isPlaying = true;
+      setIcon();
+    }).catch(()=>{
+      // autoplay blocked by browser: start on first user interaction
+      isPlaying = false;
+      setIcon();
+      const startOnce = ()=>{
+        current.play().then(()=>{ isPlaying = true; setIcon(); });
+        document.removeEventListener('click', startOnce);
+        document.removeEventListener('touchstart', startOnce);
+      };
+      document.addEventListener('click', startOnce, {once:true});
+      document.addEventListener('touchstart', startOnce, {once:true});
+    });
+  }
+
+  musicToggle.addEventListener('click', ()=>{
+    if(isPlaying){
+      current.pause();
+      isPlaying = false;
+    } else {
+      current.play();
+      isPlaying = true;
+    }
+    setIcon();
+  });
+
+  function switchTrack(target){
+    if(target === current) return;
+    const wasPlaying = isPlaying;
+    const t = current.currentTime;
+    current.pause();
+    current = target;
+    current.currentTime = Math.min(t, current.duration || t);
+    current.volume = 0.7;
+    if(wasPlaying){
+      current.play().then(()=>{ isPlaying = true; setIcon(); }).catch(()=>{ isPlaying = false; setIcon(); });
+    }
+    allTracks.forEach(tr=> tr.btn.classList.toggle('on', tr.audio === current));
+  }
+
+  allTracks.forEach(tr=> tr.btn.addEventListener('click', ()=> switchTrack(tr.audio)));
+
+  tryAutoplay();
+})();
+
+(function(){
+
+  // ---------- floating decorative emoji ----------
+  const bgEmoji = ['🐰','🌸','🎀','💖','✨','💌','🌷','⭐','🍓','💫','🦋'];
+  for(let i=0;i<18;i++){
+    const s = document.createElement('div');
+    s.className = 'spark';
+    s.textContent = bgEmoji[i % bgEmoji.length];
+    s.style.left = (Math.random()*100) + '%';
+    s.style.fontSize = (14 + Math.random()*14) + 'px';
+    s.style.animationDuration = (8 + Math.random()*8) + 's';
+    s.style.animationDelay = (Math.random()*10) + 's';
+    document.body.appendChild(s);
+  }
+
+  // ---------- state ----------
+  const answers = { invite:null, date:'', time:'', dress:'', food:null, activity:null, place:'' };
+  let stepIndex = 0; // 0=invite,1=date,2=dress,3=food,4=activity,5=place
+
+  const steps = ['invite','date','dress','food','activity','place'];
+
+  const foodOptions = [
+    {v:'drink', ic:'☕', label:'喝东西'},
+    {v:'meal', ic:'🍔', label:'吃大餐'},
+    {v:'dessert', ic:'🍦', label:'吃甜点'},
+    {v:'all', ic:'😋', label:'我都想吃！'},
+  ];
+  const activityOptions = [
+    {v:'movie', ic:'🎬', label:'看电影'},
+    {v:'play', ic:'👾', label:'去玩耍'},
+    {v:'walk', ic:'🍃', label:'去逛街'},
+    {v:'up2you', ic:'🔮', label:'听你的！'},
+  ];
+  const dressChips = ['休闲随意', '精致打扮', '小清新', '舒服就好'];
+
+  const teasePhrases = [
+    '别这样嘛~ 🥺','人家很认真的呀 🎀','再想想嘛 💭','选"可以"啦 💕',
+    '不可以是不被允许的哦 😜','拜托拜托啦 🙏','试试看嘛 ✨','反悔也可以哦 😳'
+  ];
+
+  const formArea = document.getElementById('formArea');
+  const progressFill = document.getElementById('progressFill');
+  const peek = document.getElementById('peek');
+  const peekBody = document.getElementById('peekBody');
+
+  function updateProgress(){
+    const pct = (stepIndex / (steps.length - 1)) * 100;
+    progressFill.style.width = pct + '%';
+  }
+
+  function renderPeek(){
+    const rows = [];
+    if(answers.date) rows.push(`<div class="peek-row">📅 <span class="pv">${formatDate(answers.date)}</span></div>`);
+    if(answers.dress) rows.push(`<div class="peek-row">👗 <span class="pv">${answers.dress}</span></div>`);
+    if(answers.food) rows.push(`<div class="peek-row">${foodOptions.find(f=>f.v===answers.food).ic} <span class="pv">${foodOptions.find(f=>f.v===answers.food).label}</span></div>`);
+    if(answers.activity) rows.push(`<div class="peek-row">${activityOptions.find(a=>a.v===answers.activity).ic} <span class="pv">${activityOptions.find(a=>a.v===answers.activity).label}</span></div>`);
+    if(answers.place) rows.push(`<div class="peek-row">📍 <span class="pv">${answers.place}</span></div>`);
+    peekBody.innerHTML = rows.join('');
+    peek.classList.toggle('show', rows.length > 0 && stepIndex > 0 && stepIndex < steps.length);
+  }
+
+  function formatDate(d){
+    if(!d) return '-';
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('zh-CN', { month:'long', day:'numeric', weekday:'long' });
+  }
+
+  function goto(i){
+    stepIndex = i;
+    updateProgress();
+    renderPanel();
+    renderPeek();
+  }
+
+  function spawnTease(nearEl){
+    const rect = nearEl.getBoundingClientRect();
+    const count = 1 + Math.floor(Math.random()*2);
+    for(let i=0;i<count;i++){
+      const bubble = document.createElement('div');
+      bubble.className = 'tease';
+      bubble.textContent = teasePhrases[Math.floor(Math.random()*teasePhrases.length)];
+      const x = rect.left + Math.random()*rect.width - 20;
+      const y = rect.top - 10 - Math.random()*40;
+      bubble.style.left = Math.max(8, Math.min(window.innerWidth-140, x)) + 'px';
+      bubble.style.top = Math.max(8, y) + 'px';
+      document.body.appendChild(bubble);
+      setTimeout(()=> bubble.remove(), 1900);
+    }
+  }
+
+  function renderPanel(){
+    const step = steps[stepIndex];
+    let html = '';
+
+    if(step === 'invite'){
+      html = `
+        <div class="panel">
+          <div class="invite-emoji">💌</div>
+          <h2 class="q" style="text-align:center;">hi 美丽的黄小姐，<br>我有这个荣幸约你出去吗？</h2>
+          <p class="sub" style="text-align:center;">只要再填几个小问题就好啦~</p>
+          <div class="invite-actions">
+            <button class="yes-btn" id="yesBtn">可以 💕</button>
+            <button class="no-btn" id="noBtn">不可以 😜</button>
+          </div>
+        </div>`;
+      formArea.innerHTML = html;
+
+      document.getElementById('yesBtn').addEventListener('click', ()=>{
+        answers.invite = true;
+        goto(1);
+      });
+
+      const noBtn = document.getElementById('noBtn');
+      let dodges = 0;
+      const dodge = ()=>{
+        spawnTease(noBtn);
+        if(dodges >= 6) return;
+        dodges++;
+        const wrap = noBtn.closest('.invite-actions');
+        const maxX = wrap.clientWidth - noBtn.offsetWidth - 4;
+        const maxY = 10;
+        const x = Math.random() * maxX;
+        const y = (Math.random() - 0.5) * 2 * maxY;
+        noBtn.style.position = 'absolute';
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = (18 + y) + 'px';
+      };
+      noBtn.addEventListener('mouseenter', dodge);
+      noBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); dodge(); }, {passive:false});
+
+      return;
+    }
+
+    if(step === 'date'){
+      html = `
+        <div class="panel">
+          <div class="step-tag">第 1 步 / 共 5 步 🗓️</div>
+          <h2 class="q">你什么时候<br>有空？🗓️</h2>
+          <p class="sub">请选择我们的约会日期和时间</p>
+          <div class="field-group">
+            <label class="field-label">📅 日期</label>
+            <input type="date" id="dateInput" value="${answers.date}">
+          </div>
+          <div class="field-group">
+            <label class="field-label">⏰ 时间</label>
+            <input type="time" id="timeInput" value="${answers.time}">
+          </div>
+          <div class="nav-row">
+            <button class="back-btn show" id="backBtn">← 上一步</button>
+            <button class="next-btn" id="nextBtn">下一步！✨</button>
+          </div>
+        </div>`;
+      formArea.innerHTML = html;
+      document.getElementById('backBtn').addEventListener('click', ()=> goto(0));
+      document.getElementById('nextBtn').addEventListener('click', ()=>{
+        answers.date = document.getElementById('dateInput').value;
+        answers.time = document.getElementById('timeInput').value;
+        goto(2);
+      });
+      return;
+    }
+
+    if(step === 'dress'){
+      html = `
+        <div class="panel">
+          <div class="step-tag">第 2 步 / 共 5 步 👗</div>
+          <h2 class="q">有什么着装<br>建议吗？👗</h2>
+          <p class="sub">我们应该穿什么？（可选）</p>
+          <div class="field-group">
+            <input type="text" id="dressInput" placeholder="例如：粉色系、休闲..." value="${answers.dress}">
+            <div class="chip-row" id="dressChips"></div>
+          </div>
+          <div class="nav-row">
+            <button class="back-btn show" id="backBtn">← 上一步</button>
+            <button class="next-btn" id="nextBtn">下一步！🌸</button>
+          </div>
+        </div>`;
+      formArea.innerHTML = html;
+      const chipRow = document.getElementById('dressChips');
+      dressChips.forEach(c=>{
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.type = 'button';
+        btn.textContent = c;
+        if(answers.dress === c) btn.classList.add('on');
+        btn.addEventListener('click', ()=>{
+          document.getElementById('dressInput').value = c;
+          [...chipRow.children].forEach(ch=>ch.classList.remove('on'));
+          btn.classList.add('on');
+        });
+        chipRow.appendChild(btn);
+      });
+      document.getElementById('backBtn').addEventListener('click', ()=> goto(1));
+      document.getElementById('nextBtn').addEventListener('click', ()=>{
+        answers.dress = document.getElementById('dressInput').value.trim();
+        goto(3);
+      });
+      return;
+    }
+
+    if(step === 'food'){
+      html = `
+        <div class="panel">
+          <div class="step-tag">第 3 步 / 共 5 步 🍰</div>
+          <h2 class="q">你想吃<br>点什么？🥞</h2>
+          <p class="sub">选择你的美食偏好</p>
+          <div class="options" id="foodOpts"></div>
+          <div class="nav-row">
+            <button class="back-btn show" id="backBtn">← 上一步</button>
+            <button class="next-btn" id="nextBtn" ${answers.food ? '' : 'style="opacity:.5;pointer-events:none;"'}>下一步！🌸</button>
+          </div>
+        </div>`;
+      formArea.innerHTML = html;
+      const grid = document.getElementById('foodOpts');
+      foodOptions.forEach(o=>{
+        const div = document.createElement('div');
+        div.className = 'opt' + (answers.food === o.v ? ' picked' : '');
+        div.innerHTML = `<span class="oi">${o.ic}</span><span class="ot">${o.label}</span>`;
+        div.addEventListener('click', ()=>{
+          answers.food = o.v;
+          [...grid.children].forEach(c=>c.classList.remove('picked'));
+          div.classList.add('picked');
+          document.getElementById('nextBtn').style.opacity = '1';
+          document.getElementById('nextBtn').style.pointerEvents = 'auto';
+        });
+        grid.appendChild(div);
+      });
+      document.getElementById('backBtn').addEventListener('click', ()=> goto(2));
+      document.getElementById('nextBtn').addEventListener('click', ()=>{
+        if(!answers.food) return;
+        goto(4);
+      });
+      return;
+    }
+
+    if(step === 'activity'){
+      html = `
+        <div class="panel">
+          <div class="step-tag">第 4 步 / 共 5 步 🗺️</div>
+          <h2 class="q">接下来我们<br>做什么？🗺️</h2>
+          <p class="sub">选择我们的约会活动</p>
+          <div class="options" id="actOpts"></div>
+          <div class="nav-row">
+            <button class="back-btn show" id="backBtn">← 上一步</button>
+            <button class="next-btn" id="nextBtn" ${answers.activity ? '' : 'style="opacity:.5;pointer-events:none;"'}>下一步！📍</button>
+          </div>
+        </div>`;
+      formArea.innerHTML = html;
+      const grid = document.getElementById('actOpts');
+      activityOptions.forEach(o=>{
+        const div = document.createElement('div');
+        div.className = 'opt' + (answers.activity === o.v ? ' picked' : '');
+        div.innerHTML = `<span class="oi">${o.ic}</span><span class="ot">${o.label}</span>`;
+        div.addEventListener('click', ()=>{
+          answers.activity = o.v;
+          [...grid.children].forEach(c=>c.classList.remove('picked'));
+          div.classList.add('picked');
+          document.getElementById('nextBtn').style.opacity = '1';
+          document.getElementById('nextBtn').style.pointerEvents = 'auto';
+        });
+        grid.appendChild(div);
+      });
+      document.getElementById('backBtn').addEventListener('click', ()=> goto(3));
+      document.getElementById('nextBtn').addEventListener('click', ()=>{
+        if(!answers.activity) return;
+        goto(5);
+      });
+      return;
+    }
+
+    if(step === 'place'){
+      html = `
+        <div class="panel">
+          <div class="step-tag">第 5 步 / 共 5 步 📍</div>
+          <h2 class="q">有没有想去<br>的地方？📍</h2>
+          <p class="sub">告诉我你的想法吧，我都听你的（可选）</p>
+          <div class="field-group">
+            <input type="text" id="placeInput" placeholder="例如：那家新开的咖啡厅..." value="${answers.place}">
+            <div class="chip-row" id="placeChips"></div>
+          </div>
+          <div class="nav-row">
+            <button class="back-btn show" id="backBtn">← 上一步</button>
+            <button class="next-btn" id="nextBtn">查看结果！🎉</button>
+          </div>
+        </div>`;
+      formArea.innerHTML = html;
+      const placeChips = ['你决定就好 😍', '离家近一点', '想试试新地方', '哪里都可以'];
+      const chipRow = document.getElementById('placeChips');
+      placeChips.forEach(c=>{
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.type = 'button';
+        btn.textContent = c;
+        if(answers.place === c) btn.classList.add('on');
+        btn.addEventListener('click', ()=>{
+          document.getElementById('placeInput').value = c;
+          [...chipRow.children].forEach(ch=>ch.classList.remove('on'));
+          btn.classList.add('on');
+        });
+        chipRow.appendChild(btn);
+      });
+      document.getElementById('backBtn').addEventListener('click', ()=> goto(4));
+      document.getElementById('nextBtn').addEventListener('click', ()=>{
+        answers.place = document.getElementById('placeInput').value.trim();
+        showResult();
+      });
+      return;
+    }
+  }
+
+  function showResult(){
+    peek.classList.remove('show');
+    document.getElementById('formArea').style.display = 'none';
+    document.querySelector('.progress-track').style.display = 'none';
+    const panel = document.getElementById('resultPanel');
+    panel.classList.add('show');
+
+    const food = foodOptions.find(f=>f.v===answers.food);
+    const act = activityOptions.find(a=>a.v===answers.activity);
+
+    const rows = [
+      {ic:'📅', k:'日期', v: formatDate(answers.date)},
+      {ic:'⏰', k:'时间', v: answers.time || '-'},
+      {ic:'👗', k:'服装', v: answers.dress || '随意舒适'},
+      {ic:food.ic, k:'美食', v: food.label},
+      {ic:act.ic, k:'活动', v: act.label},
+      {ic:'📍', k:'地点', v: answers.place || '你决定就好'},
+    ];
+    const list = document.getElementById('detailList');
+    list.innerHTML = rows.map(r=>`
+      <div class="detail-row">
+        <div class="detail-ic">${r.ic}</div>
+        <div class="detail-txt">
+          <div class="dk">${r.k}</div>
+          <div class="dv">${r.v}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('downloadBtn').addEventListener('click', ()=>{
+    const target = document.getElementById('shareCard');
+    html2canvas(target, {backgroundColor:null, scale:2}).then(canvas=>{
+      const link = document.createElement('a');
+      link.download = '约会计划.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', ()=>{
+    const food = foodOptions.find(f=>f.v===answers.food);
+    const act = activityOptions.find(a=>a.v===answers.activity);
+    const text = `我们的约会计划 💌\n📅 ${formatDate(answers.date)}\n⏰ ${answers.time || '-'}\n👗 ${answers.dress || '随意舒适'}\n${food.ic} ${food.label}\n${act.ic} ${act.label}\n📍 ${answers.place || '你决定就好'}`;
+    navigator.clipboard.writeText(text).then(()=>{
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(()=> toast.classList.remove('show'), 1800);
+    });
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', ()=>{
+    Object.assign(answers, { invite:null, date:'', time:'', dress:'', food:null, activity:null, place:'' });
+    document.getElementById('resultPanel').classList.remove('show');
+    document.getElementById('formArea').style.display = '';
+    document.querySelector('.progress-track').style.display = '';
+    goto(0);
+  });
+
+  goto(0);
+})();
+</script>
+
+</body>
+</html>
